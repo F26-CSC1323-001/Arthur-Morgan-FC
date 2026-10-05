@@ -1,35 +1,45 @@
 import time
 import RPi.GPIO as GPIO
-from mfrc522 import SimpleMFRC522
+from mfrc522 import MFRC522
 
-VIBRATION_PIN = None   
+VIBRATION_PIN = 27    
+RFID_RST_PIN = 25      
 
-ALLOWED_CARDS = []     
+ALLOWED_CARDS = []    
 
-reader = SimpleMFRC522()
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)                 
+reader = MFRC522(pin_rst=RFID_RST_PIN)
+
 
 def setup_rfid_vibration():
-    GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BOARD)
     GPIO.setup(VIBRATION_PIN, GPIO.IN)
+
 
 def read_card():
     
-    return reader.read_id_no_block()
+    status, _ = reader.MFRC522_Request(reader.PICC_REQIDL)  
+    if status != reader.MI_OK:
+        return None
+
+    status, uid = reader.MFRC522_Anticoll()                  
+    if status != reader.MI_OK:
+        return None
+
+    card_id = 0
+    for byte in uid:                    
+        card_id = card_id * 256 + byte
+    return card_id
+
 
 def is_allowed(card_id):
     return card_id in ALLOWED_CARDS
 
+
 def vibration_detected():
-   
     return GPIO.input(VIBRATION_PIN) == 1
 
-
 if __name__ == "__main__":
-    if VIBRATION_PIN is None:
-        print("Please set VIBRATION_PIN at the top of the file first.")
-        exit()
-
     setup_rfid_vibration()
     print("Testing RFID + vibration. Tap a card or shake the sensor...")
 
