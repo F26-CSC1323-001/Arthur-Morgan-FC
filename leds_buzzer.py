@@ -1,17 +1,17 @@
 import time
 import RPi.GPIO as GPIO
  
-GREEN_LED = None       
-RED_LED = None         
-BUZZER_PIN = None      
- 
+
+GREEN_LED = 23       
+RED_LED = 24        
+BUZZER_PIN = 17      
  
 def setup_leds_buzzer():
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)             
-    GPIO.setup(GREEN_LED, GPIO.OUT)
-    GPIO.setup(RED_LED, GPIO.OUT)
-    GPIO.setup(BUZZER_PIN, GPIO.OUT)
+    GPIO.setup(GREEN_LED, GPIO.OUT, initial=GPIO.LOW)
+    GPIO.setup(RED_LED, GPIO.OUT, initial=GPIO.LOW)
+    GPIO.setup(BUZZER_PIN, GPIO.OUT, initial=GPIO.LOW)
  
  
 def green_on():
@@ -29,6 +29,7 @@ def beep(seconds):
  
  
 def denied_signal():
+    
     GPIO.output(RED_LED, GPIO.HIGH)
     beep(1)
     GPIO.output(RED_LED, GPIO.LOW)
