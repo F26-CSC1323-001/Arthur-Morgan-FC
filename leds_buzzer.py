@@ -1,20 +1,19 @@
 import time
 import RPi.GPIO as GPIO
 
-
-GREEN_LED = 23       
-RED_LED = 24         
-BUZZER_PIN = 17     
+GREEN_LED = 23
+RED_LED = 24
+BUZZER_PIN = 17
 
 
 def setup_leds_buzzer():
     GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BCM)            
+    GPIO.setmode(GPIO.BCM)
     GPIO.setup(GREEN_LED, GPIO.OUT, initial=GPIO.LOW)
     GPIO.setup(RED_LED, GPIO.OUT, initial=GPIO.LOW)
     GPIO.setup(BUZZER_PIN, GPIO.OUT, initial=GPIO.LOW)
 
-# Light Up Here 
+
 def green_on():
     GPIO.output(GREEN_LED, GPIO.HIGH)
 
@@ -30,14 +29,12 @@ def beep(seconds):
 
 
 def denied_signal():
-  
     GPIO.output(RED_LED, GPIO.HIGH)
     beep(1)
     GPIO.output(RED_LED, GPIO.LOW)
 
 
 def alarm_signal():
-    
     for i in range(5):
         GPIO.output(RED_LED, GPIO.HIGH)
         GPIO.output(BUZZER_PIN, GPIO.HIGH)
@@ -47,10 +44,9 @@ def alarm_signal():
         time.sleep(0.2)
 
 
-
 if __name__ == "__main__":
     if None in [GREEN_LED, RED_LED, BUZZER_PIN]:
-        print("Fill the Pins Rahul")
+        print("Please fill in all the pin numbers at the top of the file first.")
         exit()
 
     setup_leds_buzzer()
